@@ -7,9 +7,24 @@ This image starts automatically two-node cluster in Apache Spark standalone clus
 * Java version: OpenJDK 8 .
 * Apache Spark version: 2.1.0 .
 
+
 ## Pull the Docker image from Docker Hub.
 ---
-__TBC__  [linktoIMage](https://hub.docker.com/r/sprinteiro/spark-cluster/)
+
+```shell
+docker pull sprinteiro/spark-cluster-docker
+```
+
+You can check the Docker image has been built by issuing the following Docker command.
+
+```shell
+$ docker images | grep sprinteiro/spark-cluster-docker
+
+
+sprinteiro/spark-cluster-docker           latest              beb19dfb7d43        21 minutes ago      336 MB
+
+```
+
 
 ## Build the Docker image.
 ---
@@ -31,19 +46,31 @@ You can check the Docker image has been built by issuing the following Docker co
 
 ```shell
 $ docker images | grep spark-cluster-alpine
+
+$ docker images | grep spark-cluster-alpine
+sprinteiro/spark-cluster-alpine           3.6                 ced12c3bab84        11 seconds ago      336 MB
+
 ```
 
 
 ## Run a Docker container.
 ---
-Make sure that the current directory is spark-cluster-docker, and run a Docker container. Once the cluster has started, you should be able to see logs from the master node a below.
+Run a Docker container by issuing the following command in __A__ or __B__, either you pulled or built the Docker image respectively. Once the cluster has started, you should be able to see logs from the master node as below.
+
+__A. Run Docker container from previously pulled image (last version), tag as sprinteiro/spark-cluster-docker.__
+
+```shell
+docker run -h scale1.docker -p7077:7077 -p8080:8080 -i -t sprinteiro/spark-cluster-docker
+```
+
+ __B. Run Docker container from previously built image, tagged as sprinteiro/spark-cluster-alpine:3.6__
 
 ```
 $ docker run -h scale1.docker -p7077:7077 -p8080:8080 -i -t sprinteiro/spark-cluster-alpine:3.6
 ```
 __Note:__ Ports mapping would need to be changed if the are already taken.
 
-Now, you should be able to see Spark web console on your browser in this [URL](http://172.17.0.2:8080)
+Now, you should be able to see Spark web console on your browser on [http://172.17.0.2:8080](http://172.17.0.2:8080)
 
 ```shell
 
