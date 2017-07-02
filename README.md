@@ -5,7 +5,7 @@ This image starts automatically two-node cluster in Apache Spark standalone clus
 
 * Base image: Linux Alpine 3.6 .
 * Java version: OpenJDK 8 .
-* Apache Spark version: 2.1.0 .
+* Apache Spark version: 2.1.1 .
 
 
 ## Pull the Docker image from Docker Hub.
