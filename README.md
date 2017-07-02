@@ -12,7 +12,7 @@ This image starts automatically two-node cluster in Apache Spark standalone clus
 ---
 
 ```shell
-docker pull sprinteiro/spark-cluster-docker
+$ docker pull sprinteiro/spark-cluster-docker
 ```
 
 You can check the Docker image has been built by issuing the following Docker command.
@@ -60,7 +60,7 @@ Run a Docker container by issuing the following command in __A__ or __B__, eithe
 __A. Run Docker container from previously pulled image (last version), tag as sprinteiro/spark-cluster-docker.__
 
 ```shell
-docker run -h scale1.docker -p7077:7077 -p8080:8080 -i -t sprinteiro/spark-cluster-docker
+$ docker run -h scale1.docker -p7077:7077 -p8080:8080 -i -t sprinteiro/spark-cluster-docker
 ```
 
  __B. Run Docker container from previously built image, tagged as sprinteiro/spark-cluster-alpine:3.6__
