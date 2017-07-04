@@ -18,5 +18,9 @@ if [ $? -eq 0 ]; then
     fi
 fi
 
-echo "ERROR -- Unable to start up cluster!!"
+if [ $? -ne 0 ]; then
+	echo "ERROR -- Unable to start up cluster!!"
+	exit 1
+fi
 
+echo "Shutting down the cluster"
