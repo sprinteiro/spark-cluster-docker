@@ -24,13 +24,13 @@ RUN mkdir /spark-jobs && mkdir /opt \
 # Set up Spark environment
 # Options for Standalone Spark Cluster
 RUN echo "SPARK_WORKER_MEMORY=2g" >> /opt/spark/conf/spark-env.sh \
-    && echo "SPARK_WORKER_INSTANCES=1" >> /opt/spark/conf/spark-env.sh
+    && echo "SPARK_EXECUTOR_INSTANCES=1" >> /opt/spark/conf/spark-env.sh
 
 COPY startTwoNodesCluster.sh /opt/startTwoNodesCluster.sh
 
 RUN chmod +x /opt/startTwoNodesCluster.sh
 
-COPY spark-jobs/spark-jobs-poc-1.0.jar /spark-jobs
+COPY ["spark-jobs/spark-jobs-poc-1.0.jar","spark-jobs/words-example.txt","/spark-jobs/"]
 
 RUN chmod +x /spark-jobs/spark-jobs-poc-1.0.jar
 
