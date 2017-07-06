@@ -116,7 +116,7 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 ## Submit a job to Apache Spark cluster.
 ---
 
-###Access Apache Spark Cluster container's command line (master's node). 
+#### Access Apache Spark Cluster container's command line (master's node). 
 
 Make sure that the Docker container's name is spark-cluster, and run /bin/bash to access the command line.
 
@@ -136,18 +136,20 @@ __B. Execute a shell/command line by running /bin/bash. __
 $ docker exec -ti spark-cluster /bin/bash
 ```
 
-###Submit the fat JAR to the master and execute a job in Spark cluster
+#### Submit the fat JAR to the master and execute a job in Spark cluster
+
+From the Apache Spark Cluster container's command line:
 
    - __Execute WordCount job__
    
 ```shell
-$ /opt/spark/bin/spark-submit --class org.apache.spark.examples.WordCount --master spark://scale1.docker:7077 /spark-jobs/spark-jobs-poc-1.0.jar /spark-jobs/words-example.txt
+bash-4.3# /opt/spark/bin/spark-submit --class org.sprinteiro.spark.examples.WordCount --master spark://scale1.docker:7077 /spark-jobs/spark-jobs-poc-1.0.jar /spark-jobs/words-example.txt
 ```
 It has been passed in words-example.txt file as a parameter which contains words to be count by the cluster, and the calculation/result is shown up on the console.
 
    - __Execute SparkPi job__
 
 ```shell
-$ /opt/spark/bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://scale1.docker:7077 /spark-jobs/spark-jobs-poc-1.0.jar 15000
+bash-4.3# /opt/spark/bin/spark-submit --class org.sprinteiro.spark.examples.SparkPi --master spark://scale1.docker:7077 /spark-jobs/spark-jobs-poc-1.0.jar 15000
 ```
 It has been passed in 15000 value as a parameter, and the PI calculation/result is shown up in the console.
