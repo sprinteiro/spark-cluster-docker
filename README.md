@@ -1,7 +1,8 @@
 # Docker standalone Apache Spark Cluster
 ---
 
-This image starts automatically two-node cluster in Apache Spark standalone cluster mode in a Docker container.
+This image starts automatically two-node cluster in Apache Spark standalone cluster mode in a single Docker container.
+Also, you can start a multi-node distributed cluster with Vagrant Docker containers.
 
 * Base image: Linux Alpine 3.6 .
 * Java version: OpenJDK 8 .
@@ -10,6 +11,22 @@ This image starts automatically two-node cluster in Apache Spark standalone clus
 Also, it contains a fat JAR with Apache Spark example jobs in Scala programming language from [Databricks](https://github.com/databricks/learning-spark). The JAR is only compatible with Apache Spark API version to 2.x as it has been upgraded from Apache Spark 1.6.
 * JAR: spark-jobs-poc (WordCount.scala, SparkPI.scala), Apache Spark 2.x compatible
 
+
+
+# Requirements before starting
+---
+
+Options to start up Apache Spark: 
+
+* __Option A__. As a two-node cluster in a single Docker container, you will need to have installed [Docker](https://www.docker.com/get-docker). Tested with Docker version 17.05.0-ce.
+
+* __Option B__. As a two-node (multi-node) cluster with Vagrant and VirtualBox, each is deployed in a Docker container. Tested with Vagrant 1.9.1 version and VirtualBox version 5.1.22.
+
+
+# Option A. Run a two-node cluster in a single Docker container
+---
+
+To start up the two-node cluster you cand either pull the built image from Docker Hub or build the Docker image from Dockerfile in Git. Subsections below explain how-to. Once you have got the Docker image, a Docker container can be run from that image. 
 
 ## Pull the Docker image from Docker Hub.
 ---
@@ -32,7 +49,7 @@ sprinteiro/spark-cluster-docker           latest              beb19dfb7d43      
 ## Build the Docker image.
 ---
 
-1.Create a directory, change to the new directory, and clone the project from Git.
+__1. Create a directory, change to the new directory, and clone the project from Git.__
 
 ```shell
 $ mkdir spark-cluster-docker
@@ -40,7 +57,7 @@ $ cd spark-cluster-docker
 $ git clone https://github.com/sprinteiro/spark-cluster-docker.git
 ```
 
-2.Build the Docker image.
+__2. Build the Docker image.__
 
 ```
 $ docker image build -t 'sprinteiro/spark-cluster-alpine:3.6' .
@@ -58,7 +75,8 @@ sprinteiro/spark-cluster-alpine           3.6                 ced12c3bab84      
 
 ## Run a Docker container.
 ---
-Run a Docker container from the image previously pulled or built, by issuing the following command in __A__ or __B__. Once the cluster has started, you should be able to see logs from the master node as below.
+
+Run a Docker container from the image previously pulled or built, by issuing the following command either in __A__ or __B__ respectively. Once the cluster has started, you should be able to see logs from the master node as below.
 
 __A. Run Docker container from the previously pulled image (lastest version), and tagged as sprinteiro/spark-cluster-docker.__
 
@@ -72,7 +90,7 @@ $ docker run --rm --name spark-cluster -h scale1.docker -p7077:7077 -p8080:8080 
 ```
 $ docker run --rm --name spark-cluster -h scale1.docker -p7077:7077 -p8080:8080 -i -t sprinteiro/spark-cluster-alpine:3.6
 ```
-__Note:__ Ports mapping would need to be changed if the are already taken.
+__Note:__ Ports mapping would need to be changed if they are already taken.
 
 Now, you should be able to see Spark UI/web console on your browser on [http://172.17.0.2:8080](http://172.17.0.2:8080) .
 
@@ -116,11 +134,17 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 ## Submit a job to Apache Spark cluster.
 ---
 
-#### Access Apache Spark Cluster container's command line (master's node). 
+Once Apache Spark cluster is up and running, you will need to create a command line session where the master node is running in the cluster, in order to submit job. This section will describe how-to with ``docker exec`` command.
+
+### Access to command line of the master node/container in the Apache Spark Cluster with Docker exec. 
+
+This section assumes that the running cluster is in a single Docker container (option A), but similar a approach can be followed for multi-node Docker containers' cluster (option B -required Docker engine if so).
 
 Make sure that the Docker container's name is spark-cluster, and run /bin/bash to access the command line.
 
-__A. Check container's name (it should be spark-cluster). __
+__1. Check container's name (it should be spark-cluster). __
+
+First of all, verify the Docker container's name where the Spark master node is running.
 
 ```
 $ docker ps
@@ -130,13 +154,15 @@ CONTAINER ID        IMAGE                                 COMMAND               
 ```
 
 
-__B. Execute a shell/command line by running /bin/bash. __
+__2. Execute a shell/command line by running /bin/bash. __
+
+Create a ``/bin/bash`` session to the Spark master in order to submit jobs next.
 
 ```shell
 $ docker exec -ti spark-cluster /bin/bash
 ```
 
-#### Submit the fat JAR to the master and execute a job in Spark cluster
+### Execute a job in Apache Spark cluster. Submit the fat JAR to the master.  
 
 From the Apache Spark Cluster container's command line:
 
@@ -153,3 +179,55 @@ It has been passed in words-example.txt file as a parameter which contains words
 bash-4.3# /opt/spark/bin/spark-submit --class org.sprinteiro.spark.examples.SparkPi --master spark://scale1.docker:7077 /spark-jobs/spark-jobs-poc-1.0.jar 15000
 ```
 It has been passed in 15000 value as a parameter, and the PI calculation/result is shown up in the console.
+
+
+# Option B. Run a two-node cluster in a distributed multi-node cluster with Vagrant.
+Once the [spark-cluster-docker](https://github.com/sprinteiro/spark-cluster-docker.git) is cloned from Git. The cluster can be started up by using Vagrant as explained in the following subsections.
+
+## Start up Apache Spark Cluster
+
+```shell 
+$ vagrant destroy --force && vagrant up --no-parallel
+```
+
+## SSH to the Spark master node to submit a job to the cluster.
+
+
+__1. Check SSH configuration in Vagrant if needed.__
+
+The host whose name is scale1 is the master node.
+
+```shell
+$ vagrant ssh-config
+  Host scale1
+  HostName 172.17.0.2
+  User vagrant
+  Port 22
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile /home/jj/.vagrant.d/insecure_private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+
+Host scale2
+  HostName 172.17.0.3
+  User vagrant
+  Port 22
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile /home/jj/.vagrant.d/insecure_private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+```
+
+__2. Login to the master node.__
+
+Issue vagrant ssh to the master node (scale1) and type in the vagrant as password for the vagrant username.
+
+```shell
+$ vagrant ssh scale1
+vagrant@172.17.0.2's password: 
+[120] Jul 23 23:43:00 wtmp_write: problem writing /dev/null/wtmp: Not a directory
+```
