@@ -26,13 +26,20 @@ RUN mkdir /spark-jobs && mkdir /opt \
 RUN echo "SPARK_WORKER_MEMORY=2g" >> /opt/spark/conf/spark-env.sh \
     && echo "SPARK_EXECUTOR_INSTANCES=1" >> /opt/spark/conf/spark-env.sh
 
-COPY startTwoNodesCluster.sh /opt/startTwoNodesCluster.sh
+COPY bin/start-two-nodes-cluster.sh /opt/start-two-nodes-cluster.sh
 
-RUN chmod +x /opt/startTwoNodesCluster.sh
+RUN chmod +x /opt/start-two-nodes-cluster.sh
 
 COPY ["spark-jobs/spark-jobs-poc-1.0.jar","spark-jobs/words-example.txt","/spark-jobs/"]
 
 RUN chmod +x /spark-jobs/spark-jobs-poc-1.0.jar
 
-CMD ["/opt/startTwoNodesCluster.sh"]
+COPY bin/dropbear-setup-startup.sh /opt/dropbear-setup-startup.sh
 
+RUN chmod +x /opt/dropbear-setup-startup.sh
+
+# Single node cluster
+# CMD ["/opt/start-two-nodes-cluster.sh"]
+
+# Multi-node cluster with Dropbear server (SSH) running on master node 
+CMD echo $(hostname) && if [[ $(hostname) = "scale1.docker" ]] ; then /opt/spark/sbin/start-master.sh && /opt/dropbear-setup-startup.sh && tail -f /opt/spark/logs/spark* ; else ping -c 2 scale1.docker && /opt/spark/sbin/start-slave.sh spark://scale1.docker:7077 && tail -f /opt/spark/logs/spark*  ;  fi
