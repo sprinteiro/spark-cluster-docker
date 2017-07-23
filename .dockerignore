@@ -1,0 +1,8 @@
+pom.xml  
+Vagrantfile
+src/*  
+target/*  
+temp/*    
+bin/*
+!bin/start-two-nodes-cluster.sh
+!bin/dropbear-setup-startup.sh
