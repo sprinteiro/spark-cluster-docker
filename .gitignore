@@ -6,5 +6,4 @@ target/
 bin/*
 !bin/start-two-nodes-cluster.sh
 !bin/vagrant-startup-spark.sh
-!bin/dropbear-setup-startup
-/bin/
+!bin/dropbear-setup-startup.sh
