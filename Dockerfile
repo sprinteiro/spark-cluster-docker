@@ -11,8 +11,8 @@ RUN apk --update add --no-cache  \
         # Java Open JDK 8
         openjdk8
                                                                              
-# Apache Spark version 2.1.1
-ENV SPARKVERSION spark-2.1.1-bin-hadoop2.7
+# Apache Spark version 2.2.0
+ENV SPARKVERSION spark-2.2.0-bin-hadoop2.7
 
 RUN mkdir /spark-jobs && mkdir /opt \
     && wget http://d3kbcqa49mib13.cloudfront.net/${SPARKVERSION}.tgz \
