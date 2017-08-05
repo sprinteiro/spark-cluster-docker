@@ -6,11 +6,20 @@ Also, you can start a multi-node distributed cluster with Vagrant Docker contain
 
 * Base image: Linux Alpine 3.6 .
 * Java version: OpenJDK 8 .
-* Apache Spark version: 2.1.1 .
+* Apache Spark version: 2.2.0 .
 
 Also, it contains a fat JAR with Apache Spark example jobs in Scala programming language from [Databricks](https://github.com/databricks/learning-spark). The JAR is only compatible with Apache Spark API version to 2.x as it has been upgraded from Apache Spark 1.6.
 * JAR: spark-jobs-poc (WordCount.scala, SparkPI.scala), Apache Spark 2.x compatible
 
+__Important:__
+By default, you will only be able to run your Apache Spark cluster with option B. 
+If wanted to run option A uncomment the below line 42 in Dockerfile, and comment out line 45 for option B.
+And, revert back the change for option B.
+
+
+Line 42: ```CMD ["/opt/start-two-nodes-cluster.sh"]```
+
+Live 45: ```CMD echo $(hostname) && if [[ $(hostname) = "scale1.docker" ]] ; then /opt/spark/sbin/start-master.sh && /opt/dropbear-setup-startup.sh && tail -f /opt/spark/logs/spark* ; else ping -c 2 scale1.docker && /opt/spark/sbin/start-slave.sh spark://scale1.docker:7077 && tail -f /opt/spark/logs/spark*  ;  fi```
 
 
 # Requirements before starting
@@ -20,8 +29,9 @@ Options to start up Apache Spark:
 
 * __Option A__. As a two-node cluster in a single Docker container, you will need to have installed [Docker](https://www.docker.com/get-docker). Tested with Docker version 17.05.0-ce.
 
-* __Option B__. As a two-node (multi-node) cluster with Vagrant and VirtualBox, each is deployed in a Docker container. Tested with Vagrant 1.9.1 version and VirtualBox version 5.1.22.
+* __Option B__. As a two-node (multi-node) cluster with Vagrant and VirtualBox, each is deployed in a Docker container. Tested with [Vagrant](https://www.vagrantup.com) 1.9.1 version and [VirtualBox](https://www.virtualbox.org) version 5.1.22 and 5.1.26.
 
+Tested on Ubuntu 14.04.5 LTS 64 bit, kernel version #112~14.04.1-Ubuntu.
 
 # Option A. Run a two-node cluster in a single Docker container
 ---
