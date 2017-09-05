@@ -152,7 +152,7 @@ This section assumes that the running cluster is in a single Docker container (o
 
 Make sure that the Docker container's name is spark-cluster, and run /bin/bash to access the command line.
 
-__1. Check container's name (it should be spark-cluster). __
+__1. Check container's name (it should be spark-cluster).__
 
 First of all, verify the Docker container's name where the Spark master node is running.
 
@@ -164,7 +164,7 @@ CONTAINER ID        IMAGE                                 COMMAND               
 ```
 
 
-__2. Execute a shell/command line by running /bin/bash. __
+__2. Execute a shell/command line by running /bin/bash.__
 
 Create a ``/bin/bash`` session to the Spark master in order to submit jobs next.
 
