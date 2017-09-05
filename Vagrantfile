@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     (1..$spark_num_instances).each do |i|
         config.vm.define "scale#{i}" do |scale|
             scale.vm.hostname = "scale#{i}.docker"
-            scale.vm.synced_folder "./temp", "/scale-shared/"
+            scale.vm.synced_folder "./temp", "/scale-shared/", create: true
             
             scale.vm.provider "docker" do |d|
                 d.build_dir = "."
